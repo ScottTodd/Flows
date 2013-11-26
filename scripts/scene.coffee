@@ -10,10 +10,11 @@ scene = new Physijs.Scene()
 scene.setGravity(gravity)
 
 # Camera Configuration
-aspect = window.innerWidth / window.innerHeight
-fov    = 35
-near   = 1
-far    = 1000
+position = new THREE.Vector3(0, 10, 50)
+aspect   = window.innerWidth / window.innerHeight
+fov      = 70
+near     = 1
+far      = 1000
 
 # Create the Camera
 camera = new THREE.PerspectiveCamera(
@@ -21,16 +22,10 @@ camera = new THREE.PerspectiveCamera(
   aspect, # Aspect Ratio
   near,   # Near Clipping Plane
   far)    # Far  Clipping Plane
+camera.position = position
+camera.lookAt(scene.position)
+scene.add(camera)
 
-camera.position.set(0, 10, 100) # X Y Z
-scene.add camera
-camera.lookAt(new THREE.Vector3(0,0,0))
-console.log scene.position
-
-
-#new THREE.PlaneGeometry(50, 50),
-#ground = new Physijs.BoxMesh(new THREE.CubeGeometry(5, 5, 5), new THREE.MeshBasicMaterial(color: 0xFFFFFF), 0) # mass
-#scene.add ground
 # Add a Sample Box
 box2 = new Physijs.BoxMesh(new THREE.CubeGeometry(5, 5, 5), new THREE.MeshBasicMaterial(color: 0x888888), 10)
 box2.position.y = 70
