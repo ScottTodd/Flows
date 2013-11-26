@@ -2,15 +2,31 @@
 Physijs.scripts.worker = "build/physijs/physijs_worker.js"
 Physijs.scripts.ammo   = "examples/js/ammo.js"
 
-# Setup the Camera
-camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
-camera.position.set 60, 50, 60
+# Scene Configuration
+gravity = new THREE.Vector3(0, -9.81, 0)
 
-# Setup the Scene
-scene = new Physijs.Scene
-scene.setGravity(new THREE.Vector3( 1, 1, 1))
+# Define the Scene
+scene = new Physijs.Scene()
+scene.setGravity(gravity)
+
+# Camera Configuration
+aspect = window.innerWidth / window.innerHeight
+fov    = 35
+near   = 1
+far    = 1000
+
+# Create the Camera
+camera = new THREE.PerspectiveCamera(
+  fov,    # Field of View
+  aspect, # Aspect Ratio
+  near,   # Near Clipping Plane
+  far)    # Far  Clipping Plane
+
+camera.position.set(0, 10, 100) # X Y Z
 scene.add camera
-camera.lookAt scene.position
+camera.lookAt(new THREE.Vector3(0,0,0))
+console.log scene.position
+
 
 # Add a Sample Box
 box = new Physijs.BoxMesh(new THREE.CubeGeometry(5, 5, 5), new THREE.MeshBasicMaterial(color: 0x888888))
