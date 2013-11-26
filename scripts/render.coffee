@@ -1,7 +1,3 @@
-# Window Settings
-height = window.innerHeight
-width  = window.innerWidth
-
 # Render Settings
 parameters =
   antialias: true
@@ -10,9 +6,9 @@ parameters =
   precision: "highp"
 
 # Create the Renderer
-renderer = new THREE.WebGLRenderer(parameters)
-document.body.appendChild(renderer.domElement)
-renderer.setSize(width, height)
+renderer = new THREE.WebGLRenderer(parameters) # Render
+document.body.appendChild(renderer.domElement) # Canvas
+renderer.setSize(window.innerWidth, window.innerHeight)
 
 # Define a Render Loop
 render = () ->
