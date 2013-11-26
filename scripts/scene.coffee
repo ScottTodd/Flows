@@ -31,7 +31,7 @@ particlesGeometry = new THREE.Geometry()
 pMaterial = new THREE.ParticleBasicMaterial(
   color: 0xFFFFFF
   size: 20
-  map: THREE.ImageUtils.loadTexture("../images/particle.png")
+  map: THREE.ImageUtils.loadTexture("images/particle.png")
   blending: THREE.AdditiveBlending
   transparent: true
 )
