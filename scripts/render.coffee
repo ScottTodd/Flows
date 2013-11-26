@@ -24,6 +24,6 @@ render() # Start Loop
 
 # Adjust the Viewport on Window Resize
 window.addEventListener "resize", ->
-  renderer.setSize(window.innerHeight, window.innerWidth)
+  renderer.setSize(window.innerWidth, window.innerHeight)
   camera.aspect = window.innerWidth / window.innerHeight
   camera.updateProjectionMatrix()
