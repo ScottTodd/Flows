@@ -1,0 +1,6 @@
+[submodule "build/physijs"]
+	path = build/physijs
+	url = https://github.com/chandlerprall/Physijs.git
+[submodule "build/threejs"]
+	path = build/threejs
+	url = https://github.com/mrdoob/three.js.git
