@@ -28,9 +28,19 @@ camera.lookAt(new THREE.Vector3(0,0,0))
 console.log scene.position
 
 
+#new THREE.PlaneGeometry(50, 50),
+#ground = new Physijs.BoxMesh(new THREE.CubeGeometry(5, 5, 5), new THREE.MeshBasicMaterial(color: 0xFFFFFF), 0) # mass
+#scene.add ground
 # Add a Sample Box
-box = new Physijs.BoxMesh(new THREE.CubeGeometry(5, 5, 5), new THREE.MeshBasicMaterial(color: 0x888888))
+box2 = new Physijs.BoxMesh(new THREE.CubeGeometry(5, 5, 5), new THREE.MeshBasicMaterial(color: 0x888888), 10)
+box2.position.y = 70
+box2.rotation.x = 1
+box2.rotation.z = 1
+box2.rotation.y = 1
+box = new Physijs.BoxMesh(new THREE.CubeGeometry(10, 1, 10), new THREE.MeshBasicMaterial(color: 0x888888), 0)
+#box.position.z = 50
 scene.add box
+scene.add box2
 
 # Forward Locals to Globals
 window.scene  = scene
