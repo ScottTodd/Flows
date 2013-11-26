@@ -23,3 +23,7 @@ window.addEventListener "resize", ->
   renderer.setSize(window.innerWidth, window.innerHeight)
   camera.aspect = window.innerWidth / window.innerHeight
   camera.updateProjectionMatrix()
+
+window.addEventListener "mousemove", ->
+  console.log event.clientX
+  console.log event.clientY
