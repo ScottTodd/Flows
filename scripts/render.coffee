@@ -9,6 +9,7 @@ parameters =
 renderer = new THREE.WebGLRenderer(parameters) # Render
 document.body.appendChild(renderer.domElement) # Canvas
 renderer.setSize(window.innerWidth, window.innerHeight)
+renderer.setClearColor(parameters.clearColor, 1.0)
 
 # Define a Render Loop
 render = () ->
