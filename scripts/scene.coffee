@@ -71,21 +71,35 @@ class FlowSource
 
     @currentParticle++
 
-  updateParticles: ->
+  updateParticles: (pushers)->
     for particle in @particlesGeometry.vertices
+
+      for pusher in pushers
+        if (particle.x > pusher.position.x - pusher.radius and
+            particle.x < pusher.position.x + pusher.radius and
+            particle.y > pusher.position.y - pusher.radius and
+            particle.y < pusher.position.y + pusher.radius)
+          particle.velocity.add pusher.pushVelocity
+
       particle.add particle.velocity
 
       # Add some jitter
-      particle.add new THREE.Vector3(2.0 * (Math.random() - 0.5),
-                                     2.0 * (Math.random() - 0.5),
+      particle.add new THREE.Vector3(1.2 * (Math.random() - 0.5),
+                                     1.2 * (Math.random() - 0.5),
                                      0)
 
     # Flag to the particle system that we have changed its vertices.
     @particleSystem.geometry.__dirtyVertices = true
 
-  update: ->
+  update: (pushers)->
     @createParticle()
-    @updateParticles()
+    @updateParticles(pushers)
+
+class Pusher
+  constructor: (position, pushVelocity) ->
+    @position = position
+    @pushVelocity = new THREE.Vector3(pushVelocity.x, pushVelocity.y, 0)
+    @radius = 20
 
 # Create some FlowSources
 sources = []
@@ -99,10 +113,14 @@ sources.push new FlowSource(new THREE.Vector2(0, -150),
                             new THREE.Vector2(0, 1),
                             0x33CC33)
 
+pushers = []
+pushers.push new Pusher(new THREE.Vector2(0, 50), new THREE.Vector2(0, 0.02))
+pushers.push new Pusher(new THREE.Vector2(-100, -50), new THREE.Vector2(0, -0.02))
+
 # Update the Scene (Called Every Frame)
 THREE.Scene::update = () ->
   for source in sources
-    source.update()
+    source.update(pushers)
 
 # Forward Locals to Globals
 window.scene  = scene
