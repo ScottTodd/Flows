@@ -20,33 +20,35 @@ scene.add(camera)
 
 # Define FlowSource class
 class FlowSource
-  constructor: (position, particleColor, rotation) ->
+  constructor: (position, initialVelocity, particleColor) ->
     @position = position
+    @initialVelocity = initialVelocity
     @color = particleColor
-    @rotation = rotation # currently unused
 
-    @particleMaterial = new THREE.ParticleBasicMaterial(
+    @particleMaterial = new THREE.ParticleBasicMaterial
       color: particleColor
       size: 20
       map: THREE.ImageUtils.loadTexture "images/particle.png"
       blending: THREE.AdditiveBlending
       transparent: true
-    )
 
     @particleCount = 1800
     @particlesGeometry = new THREE.Geometry
 
   createParticles: ->
-    # create and initialize individual particles
+    # Create and initialize individual particles
     for i in [0..@particleCount] by 1
       particle = new THREE.Vector3
       particle.x = @position.x
       particle.y = @position.y
-      particle.velocity = new THREE.Vector3(-Math.random() + 0.5, -Math.random() + 0.5, 0)
+      particle.velocity = new THREE.Vector3(@initialVelocity.x,
+                                            @initialVelocity.y,
+                                            0)
       @particlesGeometry.vertices.push particle
 
-    # create the particle system
-    @particleSystem = new THREE.ParticleSystem(@particlesGeometry, @particleMaterial)
+    # Create the particle system
+    @particleSystem = new THREE.ParticleSystem(@particlesGeometry,
+                                               @particleMaterial)
     @particleSystem.sortParticles = true
     scene.add @particleSystem
 
@@ -56,13 +58,22 @@ class FlowSource
 
       particle.add particle.velocity
 
+      # Wiggle the particle's position a bit
+      particle.add new THREE.Vector3(2.0 * (Math.random() - 0.5),
+                                     2.0 * (Math.random() - 0.5),
+                                     0)
+
     # Flag to the particle system that we have changed its vertices.
     @particleSystem.geometry.__dirtyVertices = true
 
 # Create some FlowSources
-redSource = new FlowSource(new THREE.Vector2(-300, 0), 0xCC3333, 0)
+redSource = new FlowSource(new THREE.Vector2(-300, 0),
+                           new THREE.Vector2(1, 0),
+                           0xCC3333)
 redSource.createParticles()
-blueSource = new FlowSource(new THREE.Vector2(300, 0), 0x3333CC, 0)
+blueSource = new FlowSource(new THREE.Vector2(300, 0),
+                            new THREE.Vector2(-1, 0),
+                            0x3333CC)
 blueSource.createParticles()
 
 # Update the Scene (Called Every Frame)
