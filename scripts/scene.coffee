@@ -32,18 +32,21 @@ class FlowSource
       blending: THREE.AdditiveBlending
       transparent: true
 
-    @particleCount = 1800
+    @particleCount = 600
+    @currentParticle = 0
+
+    @initializeParticles()
+
+  # Start all particles off-screen and move them on-screen in createParticle
+  initializeParticles: ->
     @particlesGeometry = new THREE.Geometry
 
-  createParticles: ->
     # Create and initialize individual particles
     for i in [0..@particleCount] by 1
       particle = new THREE.Vector3
-      particle.x = @position.x
-      particle.y = @position.y
-      particle.velocity = new THREE.Vector3(@initialVelocity.x,
-                                            @initialVelocity.y,
-                                            0)
+      particle.x = -2000 # offscreen
+      particle.y = -2000 # offscreen
+      particle.velocity = new THREE.Vector3(0, 0, 0)
       @particlesGeometry.vertices.push particle
 
     # Create the particle system
@@ -52,13 +55,27 @@ class FlowSource
     @particleSystem.sortParticles = true
     scene.add @particleSystem
 
-  updateParticles: ->
-    for i in [@particleCount-1..0] by -1
-      particle = @particlesGeometry.vertices[i]
+  # Reset particle @currentParticle to initial conditions, "creating" it
+  createParticle: ->
+    # If the maximum number of particles is reached, start reusing particles
+    if @currentParticle >= @particleCount
+      @currentParticle = 0
 
+    particle = @particlesGeometry.vertices[@currentParticle]
+    particle.x = @position.x
+    particle.y = @position.y
+    particle.velocity = new THREE.Vector3(@initialVelocity.x,
+                                          @initialVelocity.y,
+                                          0)
+    @particleSystem.geometry.__dirtyVertices = true
+
+    @currentParticle++
+
+  updateParticles: ->
+    for particle in @particlesGeometry.vertices
       particle.add particle.velocity
 
-      # Wiggle the particle's position a bit
+      # Add some jitter
       particle.add new THREE.Vector3(2.0 * (Math.random() - 0.5),
                                      2.0 * (Math.random() - 0.5),
                                      0)
@@ -66,20 +83,26 @@ class FlowSource
     # Flag to the particle system that we have changed its vertices.
     @particleSystem.geometry.__dirtyVertices = true
 
+  update: ->
+    @createParticle()
+    @updateParticles()
+
 # Create some FlowSources
-redSource = new FlowSource(new THREE.Vector2(-300, 0),
+sources = []
+sources.push new FlowSource(new THREE.Vector2(-300, 50),
                            new THREE.Vector2(1, 0),
                            0xCC3333)
-redSource.createParticles()
-blueSource = new FlowSource(new THREE.Vector2(300, 0),
+sources.push new FlowSource(new THREE.Vector2(300, -50),
                             new THREE.Vector2(-1, 0),
                             0x3333CC)
-blueSource.createParticles()
+sources.push new FlowSource(new THREE.Vector2(0, -150),
+                            new THREE.Vector2(0, 1),
+                            0x33CC33)
 
 # Update the Scene (Called Every Frame)
 THREE.Scene::update = () ->
-  redSource.updateParticles()
-  blueSource.updateParticles()
+  for source in sources
+    source.update()
 
 # Forward Locals to Globals
 window.scene  = scene
