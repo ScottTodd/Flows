@@ -1,7 +1,8 @@
 # Render Settings
 parameters =
   antialias: true
-  clearColor: 0xFFFFFF
+  alpha: true
+  clearColor: 0x020404
   maxLights: 16
   precision: "highp"
 
@@ -9,7 +10,7 @@ parameters =
 renderer = new THREE.WebGLRenderer(parameters) # Render
 document.body.appendChild(renderer.domElement) # Canvas
 renderer.setSize(window.innerWidth, window.innerHeight)
-# renderer.setClearColor(parameters.clearColor, 1.0)
+renderer.setClearColor(parameters.clearColor, 1.0)
 
 # Define a Render Loop
 render = () ->
