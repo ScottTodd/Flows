@@ -30,8 +30,7 @@ pMaterial = new THREE.ParticleBasicMaterial(
 )
 
 # Create invidual particles
-p = 0
-while p < particleCount
+for i in [0..particleCount] by 1
   particle = new THREE.Vector3
   particle.x = Math.random() * window.innerWidth - window.innerWidth / 2
   particle.y = Math.random() * window.innerHeight - window.innerHeight / 2
@@ -39,7 +38,6 @@ while p < particleCount
   particle.velocity = new THREE.Vector3(0, -Math.random(), 0)
 
   particlesGeometry.vertices.push particle
-  p++
 
 # Create the particle system
 particleSystem = new THREE.ParticleSystem(particlesGeometry, pMaterial)
@@ -49,9 +47,8 @@ particleSystem.sortParticles = true
 scene.add particleSystem
 
 updateParticles = () ->
-  pCount = particleCount
-  while pCount--
-    particle = particlesGeometry.vertices[pCount]
+  for i in [particleCount-1..0] by -1
+    particle = particlesGeometry.vertices[i]
 
     particle.add particle.velocity
 
