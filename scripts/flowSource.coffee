@@ -79,6 +79,7 @@ class FlowSource
       particle.x = -2000 # offscreen
       particle.y = -2000 # offscreen
       particle.velocity = new THREE.Vector3(0, 0, 0)
+      particle.splitChoice = 0
       @particlesGeometry.vertices.push particle
 
     # Create the particle system
@@ -105,24 +106,43 @@ class FlowSource
   compareHue: (otherHue) ->
     return Math.abs(@hue - otherHue) < 0.01
 
-  updateParticles: (walls, sinks, pushers) ->
+  updateParticles: (walls, sinks, pushers, splitters) ->
     for particle in @particlesGeometry.vertices
 
+      # Test walls
       for wall in walls
         if wall.collidingWith(particle)
           particle.x = -2000 # offscreen
           particle.y = -2000 # offscreen
 
+      # Test sinks
       for sink in sinks
         if sink.collidingWith(particle) and @compareHue(sink.hue)
           particle.x = -2000 # offscreen
           particle.y = -2000 # offscreen
           sink.charge += sink.chargeAddRate
 
+      # Test pushers
       for pusher in pushers
         if pusher.collidingWith(particle)
           particle.velocity.add pusher.pushVelocity
 
+      # Test splitters
+      collidedWithAnySplitters = false
+      for splitter in splitters
+        if splitter.collidingWith(particle)
+          collidedWithAnySplitters = true
+
+          if particle.splitChoice == 0
+            particle.splitChoice = Math.floor(Math.random() * 2) + 1
+          if particle.splitChoice == 1
+            particle.velocity.add splitter.pushVelocity1
+          if particle.splitChoice == 2
+            particle.velocity.add splitter.pushVelocity2
+      if not collidedWithAnySplitters
+        particle.splitChoice = 0
+
+      # Done testing, add current velocity to position
       particle.add particle.velocity
 
       # Add some jitter
@@ -130,9 +150,9 @@ class FlowSource
                                      1.2 * (Math.random() - 0.5),
                                      0)
 
-  update: (walls, sinks, pushers) ->
+  update: (walls, sinks, pushers, splitters) ->
     @createParticle()
-    @updateParticles(walls, sinks, pushers)
+    @updateParticles(walls, sinks, pushers, splitters)
 
 # Forward Locals to Globals
 window.FlowSource = FlowSource

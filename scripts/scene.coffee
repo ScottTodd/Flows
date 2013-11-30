@@ -70,12 +70,21 @@ sinks.push new FlowSink(scene, new THREE.Vector2(50, -50),  0.0) # Red
 
 # Create some Pushers
 pushers = []
-pushers.push new Pusher(scene, new THREE.Vector2(0, 50),
+pushers.push new Pusher(scene, new THREE.Vector2(300, 50),
                         new THREE.Vector2(0, 0.02))
 pushers.push new Pusher(scene, new THREE.Vector2(-100, -50),
                         new THREE.Vector2(0, -0.02))
 pushers.push new Pusher(scene, new THREE.Vector2(-200, 50),
                         new THREE.Vector2(0.02, -0.02))
+
+# Create some Splitters
+splitters = []
+splitters.push new Splitter(scene, new THREE.Vector2(0, 50),
+                            new THREE.Vector2( 0.02, 0),
+                            new THREE.Vector2(-0.02, 0))
+splitters.push new Splitter(scene, new THREE.Vector2(250, -50),
+                            new THREE.Vector2(0,  0.02),
+                            new THREE.Vector2(0, -0.02))
 
 # Update the Scene (Called Every Frame)
 THREE.Scene::update = () ->
@@ -83,7 +92,7 @@ THREE.Scene::update = () ->
     sink.update()
 
   for source in sources
-    source.update(walls, sinks, pushers)
+    source.update(walls, sinks, pushers, splitters)
 
   # Test removing objects from scene, this will help with level transitions
   # anySinksCharged = false
@@ -106,7 +115,8 @@ window.addEventListener "mousemove", (event) ->
   scaledX = event.clientX / window.innerWidth * 600 - 300
   scaledY = event.clientY / window.innerHeight * -400 + 200
   newPosition = new THREE.Vector2(scaledX, scaledY)
-  pushers[0].setPosition(newPosition)
+  # pushers[0].setPosition(newPosition)
+  splitters[0].setPosition(newPosition)
 
 # Forward Locals to Globals
 window.scene  = scene
