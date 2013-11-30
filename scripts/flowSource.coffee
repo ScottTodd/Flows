@@ -90,14 +90,16 @@ class FlowSource
 
     @currentParticle++
 
-  updateParticles: (pushers)->
+  updateParticles: (walls, pushers)->
     for particle in @particlesGeometry.vertices
 
+      for wall in walls
+        if wall.collidingWith(particle)
+          particle.x = -2000 # offscreen
+          particle.y = -2000 # offscreen
+
       for pusher in pushers
-        if (particle.x >= pusher.position.x - pusher.radius and
-            particle.x <= pusher.position.x + pusher.radius and
-            particle.y >= pusher.position.y - pusher.radius and
-            particle.y <= pusher.position.y + pusher.radius)
+        if pusher.collidingWith(particle)
           particle.velocity.add pusher.pushVelocity
 
       particle.add particle.velocity
@@ -107,9 +109,9 @@ class FlowSource
                                      1.2 * (Math.random() - 0.5),
                                      0)
 
-  update: (pushers)->
+  update: (walls, pushers)->
     @createParticle()
-    @updateParticles(pushers)
+    @updateParticles(walls, pushers)
 
 # Forward Locals to Globals
 window.FlowSource = FlowSource

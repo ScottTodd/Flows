@@ -60,5 +60,11 @@ class Pusher
     @pointerSphereMesh.position.x = newPosition.x + @direction.x * @radius / 1.5
     @pointerSphereMesh.position.y = newPosition.y + @direction.y * @radius / 1.5
 
+  collidingWith: (otherPosition) ->
+    return (otherPosition.x >= @position.x - @radius and
+            otherPosition.x <= @position.x + @radius and
+            otherPosition.y >= @position.y - @radius and
+            otherPosition.y <= @position.y + @radius)
+
 # Forward Locals to Globals
 window.Pusher = Pusher
