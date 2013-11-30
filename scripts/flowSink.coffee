@@ -54,6 +54,13 @@ class FlowSink
     @scene.add @supportMesh3
     @scene.add @supportMesh4
 
+  removeFromScene: ->
+    @scene.remove @cubeMesh
+    @scene.remove @supportMesh1
+    @scene.remove @supportMesh2
+    @scene.remove @supportMesh3
+    @scene.remove @supportMesh4
+
   collidingWith: (otherPosition) ->
     return (otherPosition.x >= @position.x - @radius and
             otherPosition.x <= @position.x + @radius and

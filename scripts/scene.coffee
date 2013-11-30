@@ -65,8 +65,8 @@ sources.push new FlowSource(scene, new THREE.Vector2(0, -150),
 # Create some FlowSinks
 sinks = []
 sinks.push new FlowSink(scene, new THREE.Vector2(200, -50), 0.3) # Green
-sinks.push new FlowSink(scene, new THREE.Vector2(0, -50), 0.3)   # Green
-sinks.push new FlowSink(scene, new THREE.Vector2(50, -50), 0)   # Red
+sinks.push new FlowSink(scene, new THREE.Vector2(0, -50),   0.3) # Green
+sinks.push new FlowSink(scene, new THREE.Vector2(50, -50),  0.0) # Red
 
 # Create some Pushers
 pushers = []
@@ -81,8 +81,24 @@ pushers.push new Pusher(scene, new THREE.Vector2(-200, 50),
 THREE.Scene::update = () ->
   for sink in sinks
     sink.update()
+
   for source in sources
     source.update(walls, sinks, pushers)
+
+  # Test removing objects from scene, this will help with level transitions
+  # anySinksCharged = false
+  # for sink in sinks
+  #   if sink.charge > 1 - 0.001
+  #     anySinksCharged = true
+  # if anySinksCharged
+  #   sources[0].removeFromScene()
+  #   sinks[0].removeFromScene()
+  #   walls[0].removeFromScene()
+  #   pushers[0].removeFromScene()
+  #   sources.shift()
+  #   sinks.shift()
+  #   walls.shift()
+  #   pushers.shift()
 
 # Listen for the Mouse Coordinates on Movement
 window.addEventListener "mousemove", (event) ->

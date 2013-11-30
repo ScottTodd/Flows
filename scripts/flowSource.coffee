@@ -62,6 +62,13 @@ class FlowSource
     @scene.add @pointerMesh2
     @scene.add @pointerMesh3
 
+  removeFromScene: ->
+    @scene.remove @sphereMesh
+    @scene.remove @pointerMesh1
+    @scene.remove @pointerMesh2
+    @scene.remove @pointerMesh3
+    @scene.remove @particleSystem
+
   # Start all particles off-screen and move them on-screen in createParticle
   initializeParticles: ->
     @particlesGeometry = new THREE.Geometry

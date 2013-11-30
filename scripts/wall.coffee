@@ -22,5 +22,8 @@ class Wall
             otherPosition.y >= @position.y - @dimensions.y / 2 and
             otherPosition.y <= @position.y + @dimensions.y / 2)
 
+  removeFromScene: ->
+    @scene.remove @mesh
+
 # Forward Locals to Globals
 window.Wall = Wall

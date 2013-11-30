@@ -49,6 +49,12 @@ class Pusher
     @pointerSphereMesh.position.z = depthZ * 0.5
     @scene.add @pointerSphereMesh
 
+  removeFromScene: ->
+    @scene.remove @backPlate1Mesh
+    @scene.remove @backPlate2Mesh
+    @scene.remove @centerSphereMesh
+    @scene.remove @pointerSphereMesh
+
   setPosition: (newPosition) ->
     @position = newPosition
     @backPlate1Mesh.position.x = newPosition.x
