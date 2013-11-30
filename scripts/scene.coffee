@@ -147,6 +147,17 @@ class Pusher
     @pointerSphereMesh.position.z = depthZ * 0.5
     scene.add @pointerSphereMesh
 
+  setPosition: (newPosition) ->
+    @position = newPosition
+    @backPlate1Mesh.position.x = newPosition.x
+    @backPlate1Mesh.position.y = newPosition.y
+    @backPlate2Mesh.position.x = newPosition.x
+    @backPlate2Mesh.position.y = newPosition.y
+    @centerSphereMesh.position.x = newPosition.x
+    @centerSphereMesh.position.y = newPosition.y
+    @pointerSphereMesh.position.x = newPosition.x + @direction.x * @radius / 1.5
+    @pointerSphereMesh.position.y = newPosition.y + @direction.y * @radius / 1.5
+
 # Create some FlowSources
 sources = []
 sources.push new FlowSource(new THREE.Vector2(-300, 50),
@@ -172,6 +183,14 @@ pushers.push new Pusher(new THREE.Vector2(-100, 50),
 THREE.Scene::update = () ->
   for source in sources
     source.update(pushers)
+
+# Listen for the Mouse Coordinates on Movement
+window.addEventListener "mousemove", (event) ->
+  # Temp scale values, will need a more sophisticated conversion for control
+  scaledX = event.clientX / window.innerWidth * 600 - 300
+  scaledY = event.clientY / window.innerHeight * -400 + 200
+  newPosition = new THREE.Vector2(scaledX, scaledY)
+  pushers[0].setPosition(newPosition)
 
 # Forward Locals to Globals
 window.scene  = scene
