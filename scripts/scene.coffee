@@ -18,6 +18,15 @@ camera.position = position
 camera.lookAt(scene.position)
 scene.add(camera)
 
+# Add some Lights to the Scene
+directionalLight1 = new THREE.DirectionalLight(0xFFDDDD, 0.8)
+directionalLight1.position.set(0.5, -0.2, 0.5)
+scene.add directionalLight1
+
+directionalLight2 = new THREE.DirectionalLight(0xDDDDFF, 0.8)
+directionalLight2.position.set(-0.5, 0.2, 0.5)
+scene.add directionalLight2
+
 # Define FlowSource class
 class FlowSource
   constructor: (position, initialVelocity, particleColor) ->
@@ -67,25 +76,76 @@ class FlowSource
     particle.velocity = new THREE.Vector3(@initialVelocity.x,
                                           @initialVelocity.y,
                                           0)
-    @particleSystem.geometry.__dirtyVertices = true
 
     @currentParticle++
 
-  updateParticles: ->
+  updateParticles: (pushers)->
     for particle in @particlesGeometry.vertices
+
+      for pusher in pushers
+        if (particle.x >= pusher.position.x - pusher.radius and
+            particle.x <= pusher.position.x + pusher.radius and
+            particle.y >= pusher.position.y - pusher.radius and
+            particle.y <= pusher.position.y + pusher.radius)
+          particle.velocity.add pusher.pushVelocity
+
       particle.add particle.velocity
 
       # Add some jitter
-      particle.add new THREE.Vector3(2.0 * (Math.random() - 0.5),
-                                     2.0 * (Math.random() - 0.5),
+      particle.add new THREE.Vector3(1.2 * (Math.random() - 0.5),
+                                     1.2 * (Math.random() - 0.5),
                                      0)
 
-    # Flag to the particle system that we have changed its vertices.
-    @particleSystem.geometry.__dirtyVertices = true
-
-  update: ->
+  update: (pushers)->
     @createParticle()
-    @updateParticles()
+    @updateParticles(pushers)
+
+class Pusher
+  constructor: (position, pushVelocity) ->
+    @position = position
+    @pushVelocity = new THREE.Vector3(pushVelocity.x, pushVelocity.y, 0)
+    @radius = 20
+    @direction = new THREE.Vector3(pushVelocity.x, pushVelocity.y, 0)
+    @direction.normalize()
+
+    @createMeshes()
+
+  createMeshes: ->
+    depthZ = -5
+
+    # Back Plates to show area of influence
+    @backPlate1Geometry = new THREE.CubeGeometry(@radius * 2, @radius * 2, 5)
+    @backPlate1Material = new THREE.MeshLambertMaterial(color: 0x636B6E)
+    @backPlate1Mesh     = new THREE.Mesh(@backPlate1Geometry, @backPlate1Material)
+    @backPlate1Mesh.position = new THREE.Vector3(@position.x, @position.y,
+                                                 depthZ)
+    scene.add @backPlate1Mesh
+
+    @backPlate2Geometry = new THREE.CubeGeometry(@radius * 1.6, @radius * 1.6, 5)
+    @backPlate2Material = new THREE.MeshLambertMaterial(color: 0xB3BBBE)
+    @backPlate2Mesh     = new THREE.Mesh(@backPlate2Geometry, @backPlate2Material)
+    @backPlate2Mesh.position = new THREE.Vector3(@position.x, @position.y,
+                                                 depthZ * 0.5)
+    scene.add @backPlate2Mesh
+
+    # Spheres positioned to show push direction
+    segments = 16
+    rings = 16
+    @sphereGeometry = new THREE.SphereGeometry(@radius/4.0, segments, rings)
+    @lightSphereMaterial = new THREE.MeshLambertMaterial(color: 0xE3EBEE)
+    @darkSphereMaterial = new THREE.MeshLambertMaterial(color: 0x737B7E)
+
+    @centerSphereMesh = new THREE.Mesh(@sphereGeometry, @lightSphereMaterial)
+    @centerSphereMesh.position.x = @position.x
+    @centerSphereMesh.position.y = @position.y
+    @centerSphereMesh.position.z = depthZ * 0.5
+    scene.add @centerSphereMesh
+
+    @pointerSphereMesh = new THREE.Mesh(@sphereGeometry, @darkSphereMaterial)
+    @pointerSphereMesh.position.x = @position.x + @direction.x * @radius / 1.5
+    @pointerSphereMesh.position.y = @position.y + @direction.y * @radius / 1.5
+    @pointerSphereMesh.position.z = depthZ * 0.5
+    scene.add @pointerSphereMesh
 
 # Create some FlowSources
 sources = []
@@ -99,10 +159,19 @@ sources.push new FlowSource(new THREE.Vector2(0, -150),
                             new THREE.Vector2(0, 1),
                             0x33CC33)
 
+# Create some Pushers
+pushers = []
+pushers.push new Pusher(new THREE.Vector2(0, 50),
+                        new THREE.Vector2(0, 0.02))
+pushers.push new Pusher(new THREE.Vector2(-100, -50),
+                        new THREE.Vector2(0, -0.02))
+pushers.push new Pusher(new THREE.Vector2(-100, 50),
+                        new THREE.Vector2(0.02, -0.02))
+
 # Update the Scene (Called Every Frame)
 THREE.Scene::update = () ->
   for source in sources
-    source.update()
+    source.update(pushers)
 
 # Forward Locals to Globals
 window.scene  = scene
