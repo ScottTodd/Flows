@@ -1,3 +1,6 @@
+# Constants
+pi = 3.14159265358979323
+
 # Define the Scene
 scene = new THREE.Scene
 
@@ -34,6 +37,14 @@ class FlowSource
     @initialVelocity = initialVelocity
     @color = particleColor
 
+    @radius = 10
+    @direction = new THREE.Vector3(@initialVelocity.x, @initialVelocity.y, 0)
+    @direction.normalize()
+    # Perpendicular Direction
+    @pDirection = new THREE.Vector3(@direction.x, @direction.y, 0)
+    @pDirection.applyEuler(new THREE.Euler(0, 0, pi/2))
+    @createMeshes()
+
     @particleMaterial = new THREE.ParticleBasicMaterial
       color: particleColor
       size: 20
@@ -43,8 +54,33 @@ class FlowSource
 
     @particleCount = 600
     @currentParticle = 0
-
     @initializeParticles()
+
+  createMeshes: ->
+    segments = 16
+    rings = 16
+    # Large sphere the color of this source
+    @sphereGeometry = new THREE.SphereGeometry(@radius, segments, rings)
+    @sphereMaterial = new THREE.MeshLambertMaterial(color: @color)
+    @sphereMesh     = new THREE.Mesh(@sphereGeometry, @sphereMaterial)
+    @sphereMesh.position = new THREE.Vector3(@position.x, @position.y, 0)
+    scene.add @sphereMesh
+
+    # Three small spheres around the large sphere, pointing in spawn direction
+    @pointerGeometry = new THREE.SphereGeometry(@radius / 2.5, segments, rings)
+    @pointerMaterial = new THREE.MeshLambertMaterial(color: 0x434B4E)
+    @pointerMesh1 = new THREE.Mesh(@pointerGeometry, @pointerMaterial)
+    @pointerMesh2 = new THREE.Mesh(@pointerGeometry, @pointerMaterial)
+    @pointerMesh3 = new THREE.Mesh(@pointerGeometry, @pointerMaterial)
+    @pointerMesh1.position.x = @position.x - @direction.x  * @radius * 1.2
+    @pointerMesh1.position.y = @position.y - @direction.y  * @radius * 1.2
+    @pointerMesh2.position.x = @position.x + @pDirection.x * @radius * 1.2
+    @pointerMesh2.position.y = @position.y + @pDirection.y * @radius * 1.2
+    @pointerMesh3.position.x = @position.x - @pDirection.x * @radius * 1.2
+    @pointerMesh3.position.y = @position.y - @pDirection.y * @radius * 1.2
+    scene.add @pointerMesh1
+    scene.add @pointerMesh2
+    scene.add @pointerMesh3
 
   # Start all particles off-screen and move them on-screen in createParticle
   initializeParticles: ->
@@ -71,8 +107,8 @@ class FlowSource
       @currentParticle = 0
 
     particle = @particlesGeometry.vertices[@currentParticle]
-    particle.x = @position.x
-    particle.y = @position.y
+    particle.x = @position.x + (Math.random() * @radius) - @radius / 2.0
+    particle.y = @position.y + (Math.random() * @radius) - @radius / 2.0
     particle.velocity = new THREE.Vector3(@initialVelocity.x,
                                           @initialVelocity.y,
                                           0)
