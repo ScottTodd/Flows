@@ -6,11 +6,16 @@ pi = 3.14159265358979323
 #   - After particleCount # of particles are spawned, the oldest particles
 #     are killed and reused
 class FlowSource
-  constructor: (scene, position, initialVelocity, particleColor) ->
+  constructor: (scene, position, initialVelocity, particleHue) ->
     @scene = scene
     @position = position
     @initialVelocity = initialVelocity
-    @color = particleColor
+
+    @hue = particleHue
+    @particleColor = new THREE.Color()
+    @particleColor.setHSL(@hue, 0.5, 0.2)
+    @sourceColor = new THREE.Color()
+    @sourceColor.setHSL(@hue, 0.6, 0.4)
 
     @radius = 10
     @direction = new THREE.Vector3(@initialVelocity.x, @initialVelocity.y, 0)
@@ -21,7 +26,7 @@ class FlowSource
     @createMeshes()
 
     @particleMaterial = new THREE.ParticleBasicMaterial
-      color: particleColor
+      color: @particleColor
       size: 20
       map: THREE.ImageUtils.loadTexture "images/particle.png"
       blending: THREE.AdditiveBlending
@@ -36,7 +41,7 @@ class FlowSource
     rings = 16
     # Large sphere the color of this source
     @sphereGeometry = new THREE.SphereGeometry(@radius, segments, rings)
-    @sphereMaterial = new THREE.MeshLambertMaterial(color: @color)
+    @sphereMaterial = new THREE.MeshLambertMaterial(color: @sourceColor)
     @sphereMesh     = new THREE.Mesh(@sphereGeometry, @sphereMaterial)
     @sphereMesh.position = new THREE.Vector3(@position.x, @position.y, 0)
     @scene.add @sphereMesh
