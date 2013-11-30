@@ -17,10 +17,10 @@ class Wall
     @scene.add @mesh
 
   collidingWith: (otherPosition) ->
-    return (otherPosition.x >= @position.x - @dimensions.x and
-            otherPosition.x <= @position.x + @dimensions.x and
-            otherPosition.y >= @position.y - @dimensions.y and
-            otherPosition.y <= @position.y + @dimensions.y)
+    return (otherPosition.x >= @position.x - @dimensions.x / 2 and
+            otherPosition.x <= @position.x + @dimensions.x / 2 and
+            otherPosition.y >= @position.y - @dimensions.y / 2 and
+            otherPosition.y <= @position.y + @dimensions.y / 2)
 
 # Forward Locals to Globals
 window.Wall = Wall
