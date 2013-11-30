@@ -64,7 +64,9 @@ sources.push new FlowSource(scene, new THREE.Vector2(0, -150),
 
 # Create some FlowSinks
 sinks = []
-sinks.push new FlowSink(scene, new THREE.Vector2(-170, -100), 0.3) # Green
+sinks.push new FlowSink(scene, new THREE.Vector2(200, -50), 0.3) # Green
+sinks.push new FlowSink(scene, new THREE.Vector2(0, -50), 0.3)   # Green
+sinks.push new FlowSink(scene, new THREE.Vector2(50, -50), 0)   # Red
 
 # Create some Pushers
 pushers = []
@@ -72,7 +74,7 @@ pushers.push new Pusher(scene, new THREE.Vector2(0, 50),
                         new THREE.Vector2(0, 0.02))
 pushers.push new Pusher(scene, new THREE.Vector2(-100, -50),
                         new THREE.Vector2(0, -0.02))
-pushers.push new Pusher(scene, new THREE.Vector2(-100, 50),
+pushers.push new Pusher(scene, new THREE.Vector2(-200, 50),
                         new THREE.Vector2(0.02, -0.02))
 
 # Update the Scene (Called Every Frame)
@@ -80,7 +82,7 @@ THREE.Scene::update = () ->
   for sink in sinks
     sink.update()
   for source in sources
-    source.update(walls, pushers)
+    source.update(walls, sinks, pushers)
 
 # Listen for the Mouse Coordinates on Movement
 window.addEventListener "mousemove", (event) ->

@@ -13,7 +13,7 @@ class FlowSource
 
     @hue = particleHue
     @particleColor = new THREE.Color()
-    @particleColor.setHSL(@hue, 0.5, 0.2)
+    @particleColor.setHSL(@hue, 0.7, 0.3)
     @sourceColor = new THREE.Color()
     @sourceColor.setHSL(@hue, 0.6, 0.4)
 
@@ -95,13 +95,22 @@ class FlowSource
 
     @currentParticle++
 
-  updateParticles: (walls, pushers)->
+  compareHue: (otherHue) ->
+    return Math.abs(@hue - otherHue) < 0.01
+
+  updateParticles: (walls, sinks, pushers) ->
     for particle in @particlesGeometry.vertices
 
       for wall in walls
         if wall.collidingWith(particle)
           particle.x = -2000 # offscreen
           particle.y = -2000 # offscreen
+
+      for sink in sinks
+        if sink.collidingWith(particle) and @compareHue(sink.hue)
+          particle.x = -2000 # offscreen
+          particle.y = -2000 # offscreen
+          sink.charge += sink.chargeAddRate
 
       for pusher in pushers
         if pusher.collidingWith(particle)
@@ -114,9 +123,9 @@ class FlowSource
                                      1.2 * (Math.random() - 0.5),
                                      0)
 
-  update: (walls, pushers)->
+  update: (walls, sinks, pushers) ->
     @createParticle()
-    @updateParticles(walls, pushers)
+    @updateParticles(walls, sinks, pushers)
 
 # Forward Locals to Globals
 window.FlowSource = FlowSource
