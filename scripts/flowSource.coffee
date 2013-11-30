@@ -6,11 +6,16 @@ pi = 3.14159265358979323
 #   - After particleCount # of particles are spawned, the oldest particles
 #     are killed and reused
 class FlowSource
-  constructor: (scene, position, initialVelocity, particleColor) ->
+  constructor: (scene, position, initialVelocity, particleHue) ->
     @scene = scene
     @position = position
     @initialVelocity = initialVelocity
-    @color = particleColor
+
+    @hue = particleHue
+    @particleColor = new THREE.Color()
+    @particleColor.setHSL(@hue, 0.7, 0.3)
+    @sourceColor = new THREE.Color()
+    @sourceColor.setHSL(@hue, 0.6, 0.4)
 
     @radius = 10
     @direction = new THREE.Vector3(@initialVelocity.x, @initialVelocity.y, 0)
@@ -21,7 +26,7 @@ class FlowSource
     @createMeshes()
 
     @particleMaterial = new THREE.ParticleBasicMaterial
-      color: particleColor
+      color: @particleColor
       size: 20
       map: THREE.ImageUtils.loadTexture "images/particle.png"
       blending: THREE.AdditiveBlending
@@ -36,7 +41,7 @@ class FlowSource
     rings = 16
     # Large sphere the color of this source
     @sphereGeometry = new THREE.SphereGeometry(@radius, segments, rings)
-    @sphereMaterial = new THREE.MeshLambertMaterial(color: @color)
+    @sphereMaterial = new THREE.MeshLambertMaterial(color: @sourceColor)
     @sphereMesh     = new THREE.Mesh(@sphereGeometry, @sphereMaterial)
     @sphereMesh.position = new THREE.Vector3(@position.x, @position.y, 0)
     @scene.add @sphereMesh
@@ -90,13 +95,22 @@ class FlowSource
 
     @currentParticle++
 
-  updateParticles: (walls, pushers)->
+  compareHue: (otherHue) ->
+    return Math.abs(@hue - otherHue) < 0.01
+
+  updateParticles: (walls, sinks, pushers) ->
     for particle in @particlesGeometry.vertices
 
       for wall in walls
         if wall.collidingWith(particle)
           particle.x = -2000 # offscreen
           particle.y = -2000 # offscreen
+
+      for sink in sinks
+        if sink.collidingWith(particle) and @compareHue(sink.hue)
+          particle.x = -2000 # offscreen
+          particle.y = -2000 # offscreen
+          sink.charge += sink.chargeAddRate
 
       for pusher in pushers
         if pusher.collidingWith(particle)
@@ -109,9 +123,9 @@ class FlowSource
                                      1.2 * (Math.random() - 0.5),
                                      0)
 
-  update: (walls, pushers)->
+  update: (walls, sinks, pushers) ->
     @createParticle()
-    @updateParticles(walls, pushers)
+    @updateParticles(walls, sinks, pushers)
 
 # Forward Locals to Globals
 window.FlowSource = FlowSource
