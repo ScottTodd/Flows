@@ -151,14 +151,14 @@ class Pusher
 
     # Back Plates to show area of influence
     @backPlate1Geometry = new THREE.CubeGeometry(@radius * 2, @radius * 2, 5)
-    @backPlate1Material = new THREE.MeshLambertMaterial(color: 0x636B6E)
+    @backPlate1Material = new THREE.MeshLambertMaterial(color: 0x434B4E)
     @backPlate1Mesh     = new THREE.Mesh(@backPlate1Geometry, @backPlate1Material)
     @backPlate1Mesh.position = new THREE.Vector3(@position.x, @position.y,
                                                  depthZ)
     scene.add @backPlate1Mesh
 
     @backPlate2Geometry = new THREE.CubeGeometry(@radius * 1.6, @radius * 1.6, 5)
-    @backPlate2Material = new THREE.MeshLambertMaterial(color: 0xB3BBBE)
+    @backPlate2Material = new THREE.MeshLambertMaterial(color: 0x737B7E)
     @backPlate2Mesh     = new THREE.Mesh(@backPlate2Geometry, @backPlate2Material)
     @backPlate2Mesh.position = new THREE.Vector3(@position.x, @position.y,
                                                  depthZ * 0.5)
@@ -168,8 +168,8 @@ class Pusher
     segments = 16
     rings = 16
     @sphereGeometry = new THREE.SphereGeometry(@radius/4.0, segments, rings)
-    @lightSphereMaterial = new THREE.MeshLambertMaterial(color: 0xE3EBEE)
-    @darkSphereMaterial = new THREE.MeshLambertMaterial(color: 0x737B7E)
+    @lightSphereMaterial = new THREE.MeshLambertMaterial(color: 0xC3CBCE)
+    @darkSphereMaterial = new THREE.MeshLambertMaterial(color: 0x636B6E)
 
     @centerSphereMesh = new THREE.Mesh(@sphereGeometry, @lightSphereMaterial)
     @centerSphereMesh.position.x = @position.x
