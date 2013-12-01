@@ -58,7 +58,7 @@ loadDefaultWalls = ->
 
 # Game State Variables
 controlElement = -1
-currentLevel = 4
+currentLevel = 0
 levelLoaded = false
 gameOver = false
 

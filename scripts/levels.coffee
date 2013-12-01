@@ -14,7 +14,7 @@ levels =
       ]
     pushers:
       [
-        position: [-300, -100]
+        position: [-300, -150]
         pushVelocity: [0, 0.02]
       ]
   ,
@@ -33,7 +33,7 @@ levels =
       ]
     pushers:
       [
-        position: [-300, -100]
+        position: [-300, -150]
         pushVelocity: [0.02, 0]
       ]
   ,
@@ -52,7 +52,7 @@ levels =
       ]
     pushers:
       [
-        position: [-300, -100]
+        position: [-300, -150]
         pushVelocity: [0, 0.02]
       ,
         position: [150, 50]
@@ -62,6 +62,78 @@ levels =
       [
         dimensions: [10, 100, 30]
         position: [50, 50, 0]
+      ]
+  ,
+
+    comment: "Level 4"
+    sources:
+      [
+        position: [-150, -50]
+        initialVelocity: [1, 0]
+        hue: 0
+      ,
+        position: [150, -50]
+        initialVelocity: [-1, 0]
+        hue: 0.6
+      ]
+    sinks:
+      [
+        position: [-150, 50]
+        hue: 0.6
+      ,
+        position: [150, 50]
+        hue: 0
+      ]
+    pushers:
+      [
+        position: [-300, -150]
+        pushVelocity: [0, 0.02]
+      ]
+    walls:
+      [
+        dimensions: [350, 10, 30]
+        position: [0, -100, 0]
+      ,
+        dimensions: [10, 100, 30]
+        position: [-50, 100, 0]
+      ,
+        dimensions: [10, 100, 30]
+        position: [50, 100, 0]
+      ]
+  ,
+
+    comment: "Level 5"
+    sources:
+      [
+        position: [-200, 0]
+        initialVelocity: [1, 0]
+        hue: 0
+      ,
+        position: [0, -150]
+        initialVelocity: [0, 1]
+        hue: 0.6
+      ]
+    sinks:
+      [
+        position: [0, 150]
+        hue: 0
+      ,
+        position: [200, 0]
+        hue: 0.6
+      ]
+    pushers:
+      [
+        position: [-300, -150]
+        pushVelocity: [0, 0.02]
+      ,
+        position: [-240, -150]
+        pushVelocity: [-0.02, 0]
+      ,
+        position: [-180, -150]
+        pushVelocity: [0.02, 0]
+      ,
+        position: [-120, -150]
+        pushVelocity: [0, -0.02]
       ]
   ]
 
