@@ -146,8 +146,8 @@ class FlowSource
       particle.add particle.velocity
 
       # Add some jitter
-      particle.add new THREE.Vector3(1.2 * (Math.random() - 0.5),
-                                     1.2 * (Math.random() - 0.5),
+      particle.add new THREE.Vector3(0.8 * (Math.random() - 0.5),
+                                     0.8 * (Math.random() - 0.5),
                                      0)
 
   update: (walls, sinks, pushers, splitters) ->

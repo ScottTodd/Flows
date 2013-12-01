@@ -35,79 +35,117 @@ floorMesh          = new THREE.Mesh(floorGeometry, backgroundMaterial)
 floorMesh.position.z = -20
 scene.add floorMesh
 
-walls = []
-walls.push new Wall(scene, backgroundMaterial,
-                    new THREE.Vector3(10, 400, 30),
-                    new THREE.Vector3(-350, 0, 0)) # Left
-walls.push new Wall(scene, backgroundMaterial,
-                    new THREE.Vector3(10, 400, 30),
-                    new THREE.Vector3(350, 0, 0))  # Right
-walls.push new Wall(scene, backgroundMaterial,
-                    new THREE.Vector3(700, 10, 30),
-                    new THREE.Vector3(0, 200, 0))  # Top
-walls.push new Wall(scene, backgroundMaterial,
-                    new THREE.Vector3(700, 10, 30),
-                    new THREE.Vector3(0, -200, 0)) # Bottom
-
-walls.push new Wall(scene, foregroundMaterial,
-                    new THREE.Vector3(200, 10, 30),
-                    new THREE.Vector3(0, 150, 0))
-
-# Create some FlowSources
 sources = []
-sources.push new FlowSource(scene, new THREE.Vector2(-300, 50),
-                            new THREE.Vector2(1, 0), 0)    # Red
-sources.push new FlowSource(scene, new THREE.Vector2(300, -50),
-                            new THREE.Vector2(-1, 0), 0.3) # Green
-sources.push new FlowSource(scene, new THREE.Vector2(0, -150),
-                            new THREE.Vector2(0, 1), 0.6)  # Blue
-
-# Create some FlowSinks
 sinks = []
-sinks.push new FlowSink(scene, new THREE.Vector2(200, -50), 0.3) # Green
-sinks.push new FlowSink(scene, new THREE.Vector2(0, -50),   0.3) # Green
-sinks.push new FlowSink(scene, new THREE.Vector2(50, -50),  0.0) # Red
-
-# Create some Pushers
 pushers = []
-pushers.push new Pusher(scene, new THREE.Vector2(300, 50),
-                        new THREE.Vector2(0, 0.02))
-pushers.push new Pusher(scene, new THREE.Vector2(-100, -50),
-                        new THREE.Vector2(0, -0.02))
-pushers.push new Pusher(scene, new THREE.Vector2(-200, 50),
-                        new THREE.Vector2(0.02, -0.02))
-
-# Create some Splitters
 splitters = []
-splitters.push new Splitter(scene, new THREE.Vector2(0, 50),
-                            new THREE.Vector2( 0.02, 0),
-                            new THREE.Vector2(-0.02, 0))
-splitters.push new Splitter(scene, new THREE.Vector2(250, -50),
-                            new THREE.Vector2(0,  0.02),
-                            new THREE.Vector2(0, -0.02))
+walls = []
+
+loadDefaultWalls = ->
+  walls.push new Wall(scene, backgroundMaterial,
+                      new THREE.Vector3(10, 400, 30),
+                      new THREE.Vector3(-350, 0, 0)) # Left
+  walls.push new Wall(scene, backgroundMaterial,
+                      new THREE.Vector3(10, 400, 30),
+                      new THREE.Vector3(350, 0, 0))  # Right
+  walls.push new Wall(scene, backgroundMaterial,
+                      new THREE.Vector3(700, 10, 30),
+                      new THREE.Vector3(0, 200, 0))  # Top
+  walls.push new Wall(scene, backgroundMaterial,
+                      new THREE.Vector3(700, 10, 30),
+                      new THREE.Vector3(0, -200, 0)) # Bottom
+
+currentLevel = 0
+levelLoaded = false
+gameOver = false
+
+emptyTheScene = ->
+  for objectArray in [sources, sinks, pushers, splitters, walls]
+    for object in objectArray
+      object.removeFromScene()
+    objectArray.length = 0
+
+loadLevel = (levelNumber) ->
+  if currentLevel >= levels.length
+    levelLoaded = true
+    gameOver = true
+    return
+
+  loadDefaultWalls()
+  levelToLoad = levels[currentLevel]
+
+  # FlowSources
+  if levelToLoad.sources
+    for source in levelToLoad.sources
+      sources.push new FlowSource(scene,
+          new THREE.Vector2(source.position[0], source.position[1]),
+          new THREE.Vector2(source.initialVelocity[0],
+                            source.initialVelocity[1]),
+          source.hue)
+
+  # FlowSinks
+  if levelToLoad.sinks
+    for sink in levelToLoad.sinks
+      sinks.push new FlowSink(scene,
+          new THREE.Vector2(sink.position[0], sink.position[1]),
+          sink.hue)
+
+  # Pushers
+  if levelToLoad.pushers
+    for pusher in levelToLoad.pushers
+      pushers.push new Pusher(scene,
+          new THREE.Vector2(pusher.position[0], pusher.position[1]),
+          new THREE.Vector2(pusher.pushVelocity[0], pusher.pushVelocity[1]))
+
+  # Splitters
+  if levelToLoad.splitters
+    for splitter in levelToLoad.splitters
+      splitters.push new Splitter(scene,
+          new THREE.Vector2(splitter.position[0], splitter.position[1]),
+          new THREE.Vector2(splitter.pushVelocity1[0],
+                            splitter.pushVelocity1[1]),
+          new THREE.Vector2(splitter.pushVelocity2[0],
+                            splitter.pushVelocity2[1]))
+
+  # Walls
+  if levelToLoad.walls
+    for wall in levelToLoad.walls
+      walls.push new Wall(scene, foregroundMaterial,
+          new THREE.Vector3(wall.dimensions[0],
+                            wall.dimensions[1],
+                            wall.dimensions[2]),
+          new THREE.Vector3(wall.position[0],
+                            wall.position[1],
+                            wall.position[2]))
+
+  levelLoaded = true
+
+testForVictory = ->
+  for sink in sinks
+    if sink.charge < 1 - 0.001
+      return false
+  return true
 
 # Update the Scene (Called Every Frame)
 THREE.Scene::update = () ->
+  if gameOver
+    # TODO: display 'You Win' or similar text
+    #       stop the render loop?
+    return
+
+  if not levelLoaded
+    emptyTheScene()
+    loadLevel(currentLevel)
+
   for sink in sinks
     sink.update()
 
   for source in sources
     source.update(walls, sinks, pushers, splitters)
 
-  # Test removing objects from scene, this will help with level transitions
-  # anySinksCharged = false
-  # for sink in sinks
-  #   if sink.charge > 1 - 0.001
-  #     anySinksCharged = true
-  # if anySinksCharged
-  #   sources[0].removeFromScene()
-  #   sinks[0].removeFromScene()
-  #   walls[0].removeFromScene()
-  #   pushers[0].removeFromScene()
-  #   sources.shift()
-  #   sinks.shift()
-  #   walls.shift()
-  #   pushers.shift()
+  if testForVictory()
+    levelLoaded = false
+    currentLevel++
 
 # Listen for the Mouse Coordinates on Movement
 window.addEventListener "mousemove", (event) ->
@@ -116,7 +154,8 @@ window.addEventListener "mousemove", (event) ->
   scaledY = event.clientY / window.innerHeight * -400 + 200
   newPosition = new THREE.Vector2(scaledX, scaledY)
   # pushers[0].setPosition(newPosition)
-  splitters[0].setPosition(newPosition)
+  if splitters.length > 0
+    splitters[0].setPosition(newPosition)
 
 # Forward Locals to Globals
 window.scene  = scene
