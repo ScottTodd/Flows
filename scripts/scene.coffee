@@ -214,6 +214,7 @@ onmove = (event) ->
 
         if (dx or dy) < 25
           pusher.setPosition(new THREE.Vector2(collider.point.x, collider.point.y))
+          break
 
       for splitter in splitters
 
@@ -222,6 +223,7 @@ onmove = (event) ->
 
         if (dx or dy) < 25
           splitter.setPosition(new THREE.Vector2(collider.point.x, collider.point.y))
+          break
 
 ondown = (event) ->
   event.preventDefault()
