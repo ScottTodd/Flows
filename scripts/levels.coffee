@@ -258,6 +258,53 @@ levels =
         dimensions: [10, 100, 30]
         position: [0, -50, 0]
       ]
+  ,
+
+    comment: "Level 10"
+    sources:
+      [
+        position: [-250, 50]
+        initialVelocity: [1, 0]
+        hue: 0
+      ,
+        position: [-50, 150]
+        initialVelocity: [0.707, -0.707]
+        hue: 0.6
+      ,
+        position: [-300, -50]
+        initialVelocity: [1, 0]
+        hue: 0.3
+      ]
+    sinks:
+      [
+        position: [150, 100]
+        hue: 0
+      ,
+        position: [-50, -100]
+        hue: 0.6
+      ,
+        position: [300, -50]
+        hue: 0.3
+      ]
+    pushers:
+      [
+        position: [-300, -150]
+        pushVelocity: [0, 0.02]
+      ,
+        position: [-240, -150]
+        pushVelocity: [-0.02, 0]
+      ]
+    splitters:
+      [
+        position: [-180, -150]
+        pushVelocity1: [0.02, 0]
+        pushVelocity2: [-0.02, 0]
+      ]
+    walls:
+      [
+        dimensions: [150, 10, 30]
+        position: [-75, -25, 0]
+      ]
   ]
 
 # Forward Locals to Globals
