@@ -3,7 +3,7 @@
 ![Flows](http://scotttodd.github.io/Flows/screenshots/level08.png)
 
 ## Summary
-A game about flow manipulation. To complete each level, you must position the pushers and splitters provided in such a way that each flow reaches the sink of the same color.
+Based loosely on the theme of *Change*, Flows is a game about *changing* the flow of particles in the stage. To complete each level, you must position the pushers and splitters provided in such a way that each flow reaches the sink of the same color.
 
 Best viewed in Google Chrome, also tested in Mozilla Firefox.
 
