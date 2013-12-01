@@ -20,7 +20,6 @@ Running Flows Online:
 
 ## Dependencies
 - [three.js](https://github.com/mrdoob/three.js/)
-- [Physijs](https://github.com/chandlerprall/Physijs)
 - [CoffeeScript](https://github.com/jashkenas/coffee-script)
 - [Jade](https://github.com/visionmedia/jade)
 
