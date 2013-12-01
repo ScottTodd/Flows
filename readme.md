@@ -1,7 +1,9 @@
 # [Flows](http://github.com/ScottTodd/Flows)
 
 ## Summary
-TODO.
+A game about flow manipulation. To complete each level, you must position the pushers and splitters provided in such a way that each flow reaches the sink of the same color.
+
+Submitted to [GitHub's Game Off 2013](https://github.com/github/game-off-2013) and completed as our [Computer Graphics](http://www.ecse.rpi.edu/~wrf/pmwiki/pmwiki.php/ComputerGraphicsFall2013/ComputerGraphicsFall2013) Term Project at RPI.
 
 ## Team Members
 - [Kevin Fung](https://github.com/polytonic)
@@ -11,6 +13,10 @@ TODO.
 Running Flows Locally:
   1.  `python -m SimpleHTTPServer 8080`
   2.  `http://localhost:8080/`
+
+Running Flows Online:
+  1.  Note: This is the latest version of our code, which may include changes after GitHub's Game Off deadline.
+  2.  [GitHub Pages](http://scotttodd.github.io/Flows/)
 
 ## Dependencies
 - [three.js](https://github.com/mrdoob/three.js/)
