@@ -28,5 +28,5 @@ window.addEventListener "resize", ->
 
 # Record the Mouse Coordinates on Movement
 window.addEventListener "mousemove", (event) ->
-  console.log event.clientX
-  console.log event.clientY
+  # console.log event.clientX
+  # console.log event.clientY

@@ -35,6 +35,7 @@ floorMesh          = new THREE.Mesh(floorGeometry, backgroundMaterial)
 floorMesh.position.z = -20
 scene.add floorMesh
 
+# Game Entities
 sources = []
 sinks = []
 pushers = []
@@ -55,7 +56,9 @@ loadDefaultWalls = ->
                       new THREE.Vector3(700, 10, 30),
                       new THREE.Vector3(0, -200, 0)) # Bottom
 
-currentLevel = 0
+# Game State Variables
+controlElement = -1
+currentLevel = 4
 levelLoaded = false
 gameOver = false
 
@@ -147,16 +150,29 @@ THREE.Scene::update = () ->
     levelLoaded = false
     currentLevel++
 
+# Listen for Keypresses
+# 1 controls the first pusher, 2 controls the second, etc.
+# splitters are ordered after pushers
+window.addEventListener "keydown", (event) ->
+  # key 0 -> keyCode 48
+  # key 1 -> keyCode 49
+  # ...
+  # key 9 -> keyCode 57
+  controlElement = event.which - 49
+  console.log(controlElement)
+
 # Listen for the Mouse Coordinates on Movement
 window.addEventListener "mousemove", (event) ->
   # Temp scale values, will need a more sophisticated conversion for control
   scaledX = event.clientX / window.innerWidth * 600 - 300
   scaledY = event.clientY / window.innerHeight * -400 + 200
   newPosition = new THREE.Vector2(scaledX, scaledY)
-  if pushers.length > 0
-    pushers[0].setPosition(newPosition)
-  # if splitters.length > 0
-  #   splitters[0].setPosition(newPosition)
+
+  if controlElement >= 0 and controlElement < pushers.length
+    pushers[controlElement].setPosition(newPosition)
+  if (controlElement - pushers.length >= 0 and
+      controlElement < pushers.length + splitters.length)
+    splitters[controlElement - pushers.length].setPosition(newPosition)
 
 # Forward Locals to Globals
 window.scene  = scene
