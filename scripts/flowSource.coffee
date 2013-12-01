@@ -32,7 +32,7 @@ class FlowSource
       blending: THREE.AdditiveBlending
       transparent: true
 
-    @particleCount = 600
+    @particleCount = 500
     @currentParticle = 0
     @initializeParticles()
 

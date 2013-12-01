@@ -153,9 +153,10 @@ window.addEventListener "mousemove", (event) ->
   scaledX = event.clientX / window.innerWidth * 600 - 300
   scaledY = event.clientY / window.innerHeight * -400 + 200
   newPosition = new THREE.Vector2(scaledX, scaledY)
-  # pushers[0].setPosition(newPosition)
-  if splitters.length > 0
-    splitters[0].setPosition(newPosition)
+  if pushers.length > 0
+    pushers[0].setPosition(newPosition)
+  # if splitters.length > 0
+  #   splitters[0].setPosition(newPosition)
 
 # Forward Locals to Globals
 window.scene  = scene

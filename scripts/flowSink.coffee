@@ -6,8 +6,8 @@ class FlowSink
     @position = position
 
     @charge = 0.0
-    @chargeAddRate = 0.008
-    @chargeDecayRate = 0.004
+    @chargeAddRate = 0.011
+    @chargeDecayRate = 0.0018
 
     @hue = receptorHue
     # Fixed color representing what this sink receives
