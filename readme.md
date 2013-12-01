@@ -5,6 +5,8 @@
 ## Summary
 A game about flow manipulation. To complete each level, you must position the pushers and splitters provided in such a way that each flow reaches the sink of the same color.
 
+Best viewed in Google Chrome, also tested in Mozilla Firefox.
+
 Submitted to [GitHub's Game Off 2013](https://github.com/github/game-off-2013) and completed as our [Computer Graphics](http://www.ecse.rpi.edu/~wrf/pmwiki/pmwiki.php/ComputerGraphicsFall2013/ComputerGraphicsFall2013) Term Project at RPI.
 
 ## Team Members
@@ -18,7 +20,7 @@ Running Flows Locally:
 
 Running Flows Online:
   1.  Note: This is the latest version of our code, which may include changes after GitHub's Game Off deadline.
-  2.  [GitHub Pages](http://scotttodd.github.io/Flows/)
+  2.  [Flows on GitHub Pages](http://scotttodd.github.io/Flows/)
 
 ## Controls
 - Number keys 1-9 to select pusher or splitter to control

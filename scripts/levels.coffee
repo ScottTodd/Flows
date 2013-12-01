@@ -55,7 +55,7 @@ levels =
         position: [-300, -150]
         pushVelocity: [0, 0.02]
       ,
-        position: [150, 50]
+        position: [-240, -150]
         pushVelocity: [-0.02, 0]
       ]
     walls:
@@ -195,7 +195,7 @@ levels =
         initialVelocity: [1, 0]
         hue: 0
       ,
-        position: [-250, -100]
+        position: [-250, -80]
         initialVelocity: [1, 0]
         hue: 0.6
       ]
@@ -217,6 +217,46 @@ levels =
         position: [-240, -150]
         pushVelocity1: [0, 0.02]
         pushVelocity2: [0, -0.02]
+      ]
+  ,
+
+    comment: "Level 9"
+    sources:
+      [
+        position: [-250, 50]
+        initialVelocity: [1, 0]
+        hue: 0
+      ,
+        position: [250, 50]
+        initialVelocity: [-1, 0]
+        hue: 0.6
+      ]
+    sinks:
+      [
+        position: [-100, -100]
+        hue: 0.6
+      ,
+        position: [100, -100]
+        hue: 0
+      ]
+    pushers:
+      [
+        position: [-300, -150]
+        pushVelocity: [0, -0.02]
+      ,
+        position: [-240, -150]
+        pushVelocity: [0, -0.02]
+      ]
+    splitters:
+      [
+        position: [-180, -150]
+        pushVelocity1: [0.02, 0]
+        pushVelocity2: [-0.02, 0]
+      ]
+    walls:
+      [
+        dimensions: [10, 100, 30]
+        position: [0, -50, 0]
       ]
   ]
 

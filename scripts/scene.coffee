@@ -74,6 +74,7 @@ loadLevel = (levelNumber) ->
     gameOver = true
     return
 
+  controlElement = -1
   loadDefaultWalls()
   levelToLoad = levels[currentLevel]
 
