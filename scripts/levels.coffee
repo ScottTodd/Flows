@@ -186,6 +186,38 @@ levels =
         pushVelocity1: [0, 0.02]
         pushVelocity2: [0, -0.02]
       ]
+  ,
+
+    comment: "Level 8"
+    sources:
+      [
+        position: [-250, 0]
+        initialVelocity: [1, 0]
+        hue: 0
+      ,
+        position: [-250, -100]
+        initialVelocity: [1, 0]
+        hue: 0.6
+      ]
+    sinks:
+      [
+        position: [100, 150]
+        hue: 0.6
+      ,
+        position: [150, 100]
+        hue: 0
+      ]
+    pushers:
+      [
+        position: [-300, -150]
+        pushVelocity: [0, 0.02]
+      ]
+    splitters:
+      [
+        position: [-240, -150]
+        pushVelocity1: [0, 0.02]
+        pushVelocity2: [0, -0.02]
+      ]
   ]
 
 # Forward Locals to Globals

@@ -1,5 +1,7 @@
 # [Flows](http://github.com/ScottTodd/Flows)
 
+![Flows](http://scotttodd.github.io/Flows/screenshots/level08.png)
+
 ## Summary
 A game about flow manipulation. To complete each level, you must position the pushers and splitters provided in such a way that each flow reaches the sink of the same color.
 
@@ -17,6 +19,11 @@ Running Flows Locally:
 Running Flows Online:
   1.  Note: This is the latest version of our code, which may include changes after GitHub's Game Off deadline.
   2.  [GitHub Pages](http://scotttodd.github.io/Flows/)
+
+## Controls
+- Number keys 1-9 to select pusher or splitter to control
+- Any other key to select none
+- Mouse to control the currently selected pusher or splitter
 
 ## Dependencies
 - [three.js](https://github.com/mrdoob/three.js/)
