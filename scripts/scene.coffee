@@ -175,6 +175,70 @@ window.addEventListener "mousemove", (event) ->
       controlElement < pushers.length + splitters.length)
     splitters[controlElement - pushers.length].setPosition(newPosition)
 
+###
+  To convert from 2D Screen Coordinates to Perspective 3D Coordinates
+  Based Loosely on this StackOverflow Thread:
+    http://stackoverflow.com/questions/13055214/mouse-canvas-x-y-to-three-js-world-x-y-z
+    See Also: this gist -- https://gist.github.com/jsermeno/1008612
+  Needed for Mousedown Event Listener
+###
+
+mousedown = false
+m_x = 0
+m_y = 0
+
+onmove = (event) ->
+  event.preventDefault()
+
+  if mousedown is true
+    # Capture the 2D Coordinates
+    projector = new THREE.Projector()
+    mouse2d = new THREE.Vector3(
+      (event.clientX / window.innerWidth)  * 2 - 1,
+     -(event.clientY / window.innerHeight) * 2 + 1,
+       0.5) # Why is this 0.5 ???
+    projector.unprojectVector(mouse2d, camera)
+
+    # Find All Objects Colliding With the Raycaster
+    raycaster = new THREE.Raycaster(camera.position, mouse2d.sub(camera.position).normalize())
+    intersect = raycaster.intersectObjects(scene.children)
+
+    # Handle Collision Events
+    unless intersect.length is 0
+      collider = intersect[0]
+
+      for pusher in pushers
+
+        dx = Math.abs(collider.point.x - pusher.position.x)
+        dy = Math.abs(collider.point.y - pusher.position.y)
+
+        if (dx or dy) < 25
+          pusher.setPosition(new THREE.Vector2(collider.point.x, collider.point.y))
+
+      for splitter in splitters
+
+        dx = Math.abs(collider.point.x - splitter.position.x)
+        dy = Math.abs(collider.point.y - splitter.position.y)
+
+        if (dx or dy) < 25
+          splitter.setPosition(new THREE.Vector2(collider.point.x, collider.point.y))
+
+ondown = (event) ->
+  event.preventDefault()
+  mousedown = true
+  m_x = event.clientX
+  m_y = event.clientY
+
+onup = (event) ->
+  event.preventDefault()
+  mousedown = false
+  controlElement = 99
+
+window.addEventListener "mousedown", (event) -> ondown(event)
+window.addEventListener "mousemove", (event) -> onmove(event)
+window.addEventListener "mouseup",   (event) -> onup(event)
+window.addEventListener "mouseout",  (event) -> onup(event)
+
 # Forward Locals to Globals
 window.scene  = scene
 window.camera = camera
