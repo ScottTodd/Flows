@@ -183,64 +183,47 @@ window.addEventListener "mousemove", (event) ->
   Needed for Mousedown Event Listener
 ###
 
-mousedown = false
-selected = null
+selectedObject = null
 
-check_collisions = (event) ->
+getMouseWorldPosition = (event) ->
+  windowVector = new THREE.Vector3((event.clientX / window.innerWidth)  * 2 - 1,
+                                  -(event.clientY / window.innerHeight) * 2 + 1, 0.5)
+
   projector = new THREE.Projector()
-  mouse2d = new THREE.Vector3(
-    (event.clientX / window.innerWidth)  * 2 - 1,
-   -(event.clientY / window.innerHeight) * 2 + 1,
-     0.5) # Why is this 0.5 ???
-  projector.unprojectVector(mouse2d, camera)
+  projector.unprojectVector(windowVector, camera)
 
-  # Find All Objects Colliding With the Raycaster
-  raycaster = new THREE.Raycaster(camera.position, mouse2d.sub(camera.position).normalize())
-  intersect = raycaster.intersectObjects(scene.children)
-  return intersect
+  direction = windowVector.sub(camera.position).normalize()
+  distance = - camera.position.z / direction.z
+  worldPosition = camera.position.clone().add(direction.multiplyScalar(distance))
 
-onmove = (event) ->
+  return worldPosition
+
+onMove = (event) ->
   event.preventDefault()
+  if selectedObject
+    worldPosition = getMouseWorldPosition(event)
+    selectedObject.setPosition(worldPosition)
 
-  if mousedown is true
-    unless selected is null
-      intersect = check_collisions(event)
-      unless intersect.length is 0
-        collider = intersect[0].point
-        selected.setPosition(new THREE.Vector2(collider.x, collider.y))
-
-ondown = (event) ->
+onDown = (event) ->
   event.preventDefault()
-  mousedown = true
+  worldPosition = getMouseWorldPosition(event)
 
-  intersect = check_collisions(event)
-  unless intersect.length is 0
+  for pusher in pushers
+    if pusher.collidingWith(worldPosition)
+      selectedObject = pusher
 
-    collider = intersect[0]
-    threshold = 20
+  for splitter in splitters
+    if splitter.collidingWith(worldPosition)
+      selectedObject = splitter
 
-    for pusher in pushers
-      dx = Math.abs(collider.point.x - pusher.position.x)
-      dy = Math.abs(collider.point.y - pusher.position.y)
-      if (dx or dy) <= threshold
-        return selected = pusher
-
-    for splitter in splitters
-      dx = Math.abs(collider.point.x - splitter.position.x)
-      dy = Math.abs(collider.point.y - splitter.position.y)
-      if (dx or dy) <= threshold
-        return selected = splitter
-
-onup = (event) ->
+onUp = (event) ->
   event.preventDefault()
-  mousedown = false
-  selected = null
-  controlElement = 99
+  selectedObject = null
 
-window.addEventListener "mousedown", (event) -> ondown(event)
-window.addEventListener "mousemove", (event) -> onmove(event)
-window.addEventListener "mouseup",   (event) -> onup(event)
-window.addEventListener "mouseout",  (event) -> onup(event)
+window.addEventListener "mousedown", (event) -> onDown(event)
+window.addEventListener "mousemove", (event) -> onMove(event)
+window.addEventListener "mouseup",   (event) -> onUp(event)
+window.addEventListener "mouseout",  (event) -> onUp(event)
 
 # Forward Locals to Globals
 window.scene  = scene
