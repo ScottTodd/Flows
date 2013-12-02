@@ -151,30 +151,6 @@ THREE.Scene::update = () ->
     levelLoaded = false
     currentLevel++
 
-# Listen for Keypresses
-# 1 controls the first pusher, 2 controls the second, etc.
-# splitters are ordered after pushers
-window.addEventListener "keydown", (event) ->
-  # key 0 -> keyCode 48
-  # key 1 -> keyCode 49
-  # ...
-  # key 9 -> keyCode 57
-  controlElement = event.which - 49
-  console.log(controlElement)
-
-# Listen for the Mouse Coordinates on Movement
-window.addEventListener "mousemove", (event) ->
-  # Temp scale values, will need a more sophisticated conversion for control
-  scaledX = event.clientX / window.innerWidth * 600 - 300
-  scaledY = event.clientY / window.innerHeight * -400 + 200
-  newPosition = new THREE.Vector2(scaledX, scaledY)
-
-  if controlElement >= 0 and controlElement < pushers.length
-    pushers[controlElement].setPosition(newPosition)
-  if (controlElement - pushers.length >= 0 and
-      controlElement < pushers.length + splitters.length)
-    splitters[controlElement - pushers.length].setPosition(newPosition)
-
 ###
   To convert from 2D Screen Coordinates to Perspective 3D Coordinates
   Based Loosely on this StackOverflow Thread:
