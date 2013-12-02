@@ -184,56 +184,57 @@ window.addEventListener "mousemove", (event) ->
 ###
 
 mousedown = false
-m_x = 0
-m_y = 0
+selected = null
+
+check_collisions = (event) ->
+  projector = new THREE.Projector()
+  mouse2d = new THREE.Vector3(
+    (event.clientX / window.innerWidth)  * 2 - 1,
+   -(event.clientY / window.innerHeight) * 2 + 1,
+     0.5) # Why is this 0.5 ???
+  projector.unprojectVector(mouse2d, camera)
+
+  # Find All Objects Colliding With the Raycaster
+  raycaster = new THREE.Raycaster(camera.position, mouse2d.sub(camera.position).normalize())
+  intersect = raycaster.intersectObjects(scene.children)
+  return intersect
 
 onmove = (event) ->
   event.preventDefault()
 
   if mousedown is true
-    # Capture the 2D Coordinates
-    projector = new THREE.Projector()
-    mouse2d = new THREE.Vector3(
-      (event.clientX / window.innerWidth)  * 2 - 1,
-     -(event.clientY / window.innerHeight) * 2 + 1,
-       0.5) # Why is this 0.5 ???
-    projector.unprojectVector(mouse2d, camera)
-
-    # Find All Objects Colliding With the Raycaster
-    raycaster = new THREE.Raycaster(camera.position, mouse2d.sub(camera.position).normalize())
-    intersect = raycaster.intersectObjects(scene.children)
-
-    # Handle Collision Events
-    unless intersect.length is 0
-      collider = intersect[0]
-
-      for pusher in pushers
-
-        dx = Math.abs(collider.point.x - pusher.position.x)
-        dy = Math.abs(collider.point.y - pusher.position.y)
-
-        if (dx or dy) < 25
-          pusher.setPosition(new THREE.Vector2(collider.point.x, collider.point.y))
-          break
-
-      for splitter in splitters
-
-        dx = Math.abs(collider.point.x - splitter.position.x)
-        dy = Math.abs(collider.point.y - splitter.position.y)
-
-        if (dx or dy) < 25
-          splitter.setPosition(new THREE.Vector2(collider.point.x, collider.point.y))
-          break
+    unless selected is null
+      intersect = check_collisions(event)
+      unless intersect.length is 0
+        collider = intersect[0].point
+        selected.setPosition(new THREE.Vector2(collider.x, collider.y))
 
 ondown = (event) ->
   event.preventDefault()
   mousedown = true
-  m_x = event.clientX
-  m_y = event.clientY
+
+  intersect = check_collisions(event)
+  unless intersect.length is 0
+
+    collider = intersect[0]
+    threshold = 20
+
+    for pusher in pushers
+      dx = Math.abs(collider.point.x - pusher.position.x)
+      dy = Math.abs(collider.point.y - pusher.position.y)
+      if (dx or dy) <= threshold
+        return selected = pusher
+
+    for splitter in splitters
+      dx = Math.abs(collider.point.x - splitter.position.x)
+      dy = Math.abs(collider.point.y - splitter.position.y)
+      if (dx or dy) <= threshold
+        return selected = splitter
 
 onup = (event) ->
   event.preventDefault()
   mousedown = false
+  selected = null
   controlElement = 99
 
 window.addEventListener "mousedown", (event) -> ondown(event)
