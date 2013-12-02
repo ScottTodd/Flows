@@ -23,9 +23,7 @@ Running Flows Online:
   2.  [Flows on GitHub Pages](http://scotttodd.github.io/Flows/)
 
 ## Controls
-- Number keys 1-9 to select pusher or splitter to control
-- Any other key to select none
-- Mouse to control the currently selected pusher or splitter
+- Click and drag to move pushers and splitters.
 
 ## Dependencies
 - [three.js](https://github.com/mrdoob/three.js/)
