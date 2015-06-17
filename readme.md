@@ -17,7 +17,7 @@ Submitted to [GitHub's Game Off 2013](https://github.com/github/game-off-2013) a
 Running Flows Locally:
   1.  `git clone --recursive https://github.com/ScottTodd/Flows`
   2. `npm install -g jade`
-  3. `cd build && jade index.jade`
+  3. `cd build && jade index.jade && cd ..`
   4.  `python -m SimpleHTTPServer 8080`
   5.  Visit `http://localhost:8080/`
 
