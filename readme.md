@@ -15,8 +15,11 @@ Submitted to [GitHub's Game Off 2013](https://github.com/github/game-off-2013) a
 
 ## Getting Started
 Running Flows Locally:
-  1.  `python -m SimpleHTTPServer 8080`
-  2.  `http://localhost:8080/`
+  1.  `git clone --recursive https://github.com/ScottTodd/Flows`
+  2. `npm install -g jade`
+  3. `cd build && jade index.jade`
+  4.  `python -m SimpleHTTPServer 8080`
+  5.  Visit `http://localhost:8080/`
 
 Running Flows Online:
   1.  Note: This is the latest version of our code, which may include changes after GitHub's Game Off deadline.
